@@ -8,6 +8,8 @@ import {
   query,
   where,
   getDocs,
+  doc,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -25,31 +27,62 @@ const db = getFirestore(app);
 
 const signupBtn = document.getElementById("signup");
 const loginBtn = document.getElementById("login");
-const username = document.querySelector(".username");
-const password = document.querySelector(".password");
+const inputUsername = document.querySelector(".inputUsername");
+const inputPassword = document.querySelector(".inputPassword");
+let userId;
+let userData;
+
+function clearFields() {
+  inputUsername.value = "";
+  inputPassword.value = "";
+}
+
+async function userCheck() {
+  let q = query(
+    collection(db, "users"),
+    where("username", "==", inputUsername.value)
+  );
+
+  let querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    userId = doc.id;
+    userData = doc.data();
+  });
+}
 
 signupBtn.addEventListener("click", async () => {
-  await addDoc(collection(db, "users"), {
-    username: username.value,
-    pass: password.value,
-  });
+  await userCheck();
 
-  username.value = "";
-  password.value = "";
+  if (userData.username == inputUsername.value) {
+    console.log("user already exists with this username", userData);
+  } else if (!userId) {
+    await addDoc(collection(db, "users"), {
+      username: inputUsername.value,
+      pass: inputPassword.value,
+    });
+    console.log("user added to db");
+  }
+
+  clearFields();
+
+  userId = "";
+  userData = "";
 });
 
 loginBtn.addEventListener("click", async () => {
-  const q = query(collection(db, "users"), where("username", "==", username.value));
+  await userCheck();
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
+  if (userId && userData.pass == inputPassword.value) {
+    console.log("logged in", userData);
+  } else if (!userId) {
+    console.log("no user exists");
+  } else if (userData.pass != inputPassword.value) {
+    console.log("pass incorrect");
+  }
 
-    if (password.value == doc.data().pass) {
-      console.log("you are logged in");
-    } else {
-      console.log("error login");
-    }
-  });
+  clearFields();
+
+  userId = "";
+  userData = "";
 });
