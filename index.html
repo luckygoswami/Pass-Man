@@ -9,10 +9,14 @@
   </head>
   <body>
     <div class="container">
-      <input type="text" class="inputUsername" placeholder="username" />
-      <input type="text" class="inputPassword" placeholder="password" />
-      <button id="signup">signup</button>
-      <button id="login">login</button>
+      <div class="form">
+        <input type="text" class="inputUsername" placeholder="username" />
+        <input type="text" class="inputPassword" placeholder="password" />
+        <button id="login" class="formBtn active">login</button>
+        <button id="signup" class="formBtn">signup</button>
+        <button class="toggleFormBtn active">create an account, signup here</button>
+        <button class="toggleFormBtn">already have an account, login here</button>
+      </div>
     </div>
 
     <script type="module" src="script.js"></script>

@@ -27,10 +27,23 @@ const db = getFirestore(app);
 
 const signupBtn = document.getElementById("signup");
 const loginBtn = document.getElementById("login");
+
 const inputUsername = document.querySelector(".inputUsername");
 const inputPassword = document.querySelector(".inputPassword");
+const toggleFormBtn = document.querySelectorAll(".toggleFormBtn");
 let userId;
 let userData;
+
+toggleFormBtn.forEach((button) => {
+  button.addEventListener("click", () => {
+    loginBtn.classList.toggle("active");
+    signupBtn.classList.toggle("active");
+
+    toggleFormBtn.forEach((btn) => {
+      btn.classList.toggle("active");
+    });
+  });
+});
 
 function clearFields() {
   inputUsername.value = "";
