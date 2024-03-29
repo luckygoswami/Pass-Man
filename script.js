@@ -34,6 +34,7 @@ const inputUsername = document.querySelector(".inputUsername");
 const inputPassword = document.querySelector(".inputPassword");
 const toggleFormBtn = document.querySelectorAll(".toggleFormBtn");
 const dataContainer = document.querySelector(".dataContainer");
+const dataPage = document.querySelector(".dataPage");
 const websiteUsername = document.querySelector(".websiteUsername");
 const websitePassword = document.querySelector(".websitePassword");
 const infoPage = document.querySelector(".infoPage");
@@ -50,29 +51,34 @@ let userId;
 let userData;
 
 const docRef = doc(db, "users", "tG5N5ZH46uqETnZWkVRP");
-const docSnap = await getDoc(docRef);
+let docSnap = await getDoc(docRef);
 
-if (docSnap.exists()) {
-  docSnap.data().passwords.forEach((e) => {
-    let websiteDiv = document.createElement("div");
-    websiteDiv.textContent = e.website;
-    websiteDiv.classList.add("website");
-    dataContainer.appendChild(websiteDiv);
+function loadData(data) {
+  if (data.exists()) {
+    dataContainer.innerHTML = "";
 
-    websiteDiv.addEventListener("click", () => {
-      websiteName.textContent = e.website;
-      websiteUsername.value = e.username;
-      websitePassword.value = e.password;
-      console.log(e);
+    data.data().passwords.forEach((e) => {
+      let websiteDiv = document.createElement("div");
+      websiteDiv.textContent = e.website;
+      websiteDiv.classList.add("website");
+      dataContainer.appendChild(websiteDiv);
 
-      dataContainer.classList.toggle("active");
-      infoPage.classList.toggle("active");
+      websiteDiv.addEventListener("click", () => {
+        websiteName.textContent = e.website;
+        websiteUsername.value = e.username;
+        websitePassword.value = e.password;
+
+        dataPage.classList.toggle("active");
+        infoPage.classList.toggle("active");
+      });
     });
-  });
-} else {
-  // docSnap.data() will be undefined in this case
-  console.log("No such document!");
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
 }
+
+loadData(docSnap);
 
 toggleFormBtn.forEach((button) => {
   button.addEventListener("click", () => {
@@ -150,4 +156,10 @@ addWebsiteBtn.addEventListener("click", async () => {
       username: newWebsiteUsername.value,
     }),
   });
+
+  let docSnap = await getDoc(docRef);
+
+  loadData(docSnap);
+
+  addWebsiteForm.classList.toggle("active");
 });
