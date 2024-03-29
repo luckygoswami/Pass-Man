@@ -14,6 +14,11 @@ body {
 }
 
 .container {
+  display: none;
+}
+
+.container.active {
+  display: block;
   width: 70%;
   height: 70%;
 }
@@ -52,4 +57,49 @@ input {
   background: transparent;
   border: none;
   cursor: pointer;
+}
+
+.dataContainer {
+  display: none;
+}
+
+.dataContainer.active {
+  display: block;
+  width: 70%;
+  height: 70%;
+  background-color: aqua;
+}
+
+.website {
+  margin: 5px;
+  background-color: pink;
+  height: 40px;
+}
+
+.infoPage {
+  display: none;
+}
+
+.infoPage.active {
+  display: block;
+  width: 70%;
+  height: 70%;
+  background-color: lightblue;
+}
+
+.addWebsiteForm {
+  display: none;
+}
+
+.addWebsiteForm.active {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.377);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
 }

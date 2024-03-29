@@ -8,8 +8,11 @@ import {
   query,
   where,
   getDocs,
-  doc,
   getDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+  arrayUnion,
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -27,12 +30,49 @@ const db = getFirestore(app);
 
 const signupBtn = document.getElementById("signup");
 const loginBtn = document.getElementById("login");
-
 const inputUsername = document.querySelector(".inputUsername");
 const inputPassword = document.querySelector(".inputPassword");
 const toggleFormBtn = document.querySelectorAll(".toggleFormBtn");
+const dataContainer = document.querySelector(".dataContainer");
+const websiteUsername = document.querySelector(".websiteUsername");
+const websitePassword = document.querySelector(".websitePassword");
+const infoPage = document.querySelector(".infoPage");
+const websiteName = document.querySelector(".websiteName");
+const addAnotherWebsiteBtn = document.querySelector(".addAnotherWebsiteBtn");
+const addWebsiteForm = document.querySelector(".addWebsiteForm");
+let newWebsite = document.querySelector(".newWebsite");
+let newWebsiteUsername = document.querySelector(".newWebsiteUsername");
+let newWebsitePassword = document.querySelector(".newWebsitePassword");
+const addWebsiteBtn = document.querySelector(".addWebsiteBtn");
+
+let currentUserId;
 let userId;
 let userData;
+
+const docRef = doc(db, "users", "tG5N5ZH46uqETnZWkVRP");
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+  docSnap.data().passwords.forEach((e) => {
+    let websiteDiv = document.createElement("div");
+    websiteDiv.textContent = e.website;
+    websiteDiv.classList.add("website");
+    dataContainer.appendChild(websiteDiv);
+
+    websiteDiv.addEventListener("click", () => {
+      websiteName.textContent = e.website;
+      websiteUsername.value = e.username;
+      websitePassword.value = e.password;
+      console.log(e);
+
+      dataContainer.classList.toggle("active");
+      infoPage.classList.toggle("active");
+    });
+  });
+} else {
+  // docSnap.data() will be undefined in this case
+  console.log("No such document!");
+}
 
 toggleFormBtn.forEach((button) => {
   button.addEventListener("click", () => {
@@ -48,6 +88,8 @@ toggleFormBtn.forEach((button) => {
 function clearFields() {
   inputUsername.value = "";
   inputPassword.value = "";
+  userId = "";
+  userData = "";
 }
 
 async function userCheck() {
@@ -68,34 +110,44 @@ signupBtn.addEventListener("click", async () => {
   await userCheck();
 
   if (userData.username == inputUsername.value) {
-    console.log("user already exists with this username", userData);
+    alert("user already exists with this username!");
   } else if (!userId) {
     await addDoc(collection(db, "users"), {
       username: inputUsername.value,
       pass: inputPassword.value,
     });
-    console.log("user added to db");
+    alert("account created successfully");
   }
 
   clearFields();
-
-  userId = "";
-  userData = "";
 });
 
 loginBtn.addEventListener("click", async () => {
   await userCheck();
 
   if (userId && userData.pass == inputPassword.value) {
-    console.log("logged in", userData);
+    currentUserId = userId;
+    console.log("logged in", currentUserId);
   } else if (!userId) {
-    console.log("no user exists");
+    alert("no user exists with this username!");
   } else if (userData.pass != inputPassword.value) {
-    console.log("pass incorrect");
+    alert("password incorrect!");
   }
 
   clearFields();
+});
 
-  userId = "";
-  userData = "";
+addAnotherWebsiteBtn.addEventListener("click", () => {
+  addWebsiteForm.classList.toggle("active");
+});
+
+addWebsiteBtn.addEventListener("click", async () => {
+  // Atomically add a new website to the "passwords" array field.
+  await updateDoc(docRef, {
+    passwords: arrayUnion({
+      password: newWebsitePassword.value,
+      website: newWebsite.value,
+      username: newWebsiteUsername.value,
+    }),
+  });
 });
