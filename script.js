@@ -13,6 +13,8 @@ import {
   onSnapshot,
   updateDoc,
   arrayUnion,
+  arrayRemove,
+  deleteField,
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -42,23 +44,32 @@ const websiteName = document.querySelector(".websiteName");
 const addAnotherWebsiteBtn = document.querySelector(".addAnotherWebsiteBtn");
 const addWebsiteForm = document.querySelector(".addWebsiteForm");
 const websiteForm = document.querySelector(".websiteForm");
-let newWebsite = document.querySelector(".newWebsite");
-let newWebsiteUsername = document.querySelector(".newWebsiteUsername");
-let newWebsitePassword = document.querySelector(".newWebsitePassword");
+const newWebsite = document.querySelector(".newWebsite");
+const newWebsiteUsername = document.querySelector(".newWebsiteUsername");
+const newWebsitePassword = document.querySelector(".newWebsitePassword");
 const addWebsiteBtn = document.querySelector(".addWebsiteBtn");
+const infoPageBackBtn = document.querySelector(".infoPage-backBtn");
 
+const editDetailsBtn = document.querySelector(".editDetailsBtn");
+const editWebisteForm = document.querySelector(".editWebisteForm");
+const editWebsiteInput = document.querySelector(".editWebsite");
+const editUsernameInput = document.querySelector(".editUsername");
+const editPasswordInput = document.querySelector(".editPassword");
+const saveDetailsBtn = document.querySelector(".saveDetails");
+
+let currentWebsiteIndex;
 let currentUserId;
 let userId;
 let userData;
 
 const docRef = doc(db, "users", "tG5N5ZH46uqETnZWkVRP");
-let docSnap = await getDoc(docRef);
 
-function loadData(data) {
-  if (data.exists()) {
+async function loadData() {
+  let docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
     dataContainer.innerHTML = "";
 
-    data.data().passwords.forEach((e) => {
+    docSnap.data().passwords.forEach((e, index) => {
       let websiteDiv = document.createElement("div");
       websiteDiv.textContent = e.website;
       websiteDiv.classList.add("website");
@@ -68,6 +79,7 @@ function loadData(data) {
         websiteName.textContent = e.website;
         websiteUsername.value = e.username;
         websitePassword.value = e.password;
+        currentWebsiteIndex = index;
 
         dataPage.classList.toggle("active");
         infoPage.classList.toggle("active");
@@ -79,7 +91,8 @@ function loadData(data) {
   }
 }
 
-loadData(docSnap);
+// create webiste divs
+loadData();
 
 toggleFormBtn.forEach((button) => {
   button.addEventListener("click", () => {
@@ -158,17 +171,61 @@ addWebsiteBtn.addEventListener("click", async () => {
     }),
   });
 
-  let docSnap = await getDoc(docRef);
-
-  loadData(docSnap);
+  loadData();
 
   addWebsiteForm.classList.toggle("active");
 });
 
 addWebsiteForm.addEventListener("click", (e) => {
-  console.log(newWebsite);
   if (e.target.tagName == "DIV") {
     addWebsiteForm.classList.toggle("active");
   }
-  console.log(e);
+});
+
+infoPageBackBtn.addEventListener("click", () => {
+  infoPage.classList.toggle("active");
+  dataPage.classList.toggle("active");
+  loadData();
+});
+
+editDetailsBtn.addEventListener("click", async () => {
+  let docSnap = await getDoc(docRef);
+
+  editWebisteForm.classList.toggle("active");
+
+  editWebsiteInput.value = docSnap.data().passwords[currentWebsiteIndex].website;
+  editUsernameInput.value = docSnap.data().passwords[currentWebsiteIndex].username;
+  editPasswordInput.value = docSnap.data().passwords[currentWebsiteIndex].password;
+});
+
+editWebisteForm.addEventListener("click", (e) => {
+  if (e.target.tagName == "DIV") {
+    editWebisteForm.classList.toggle("active");
+  }
+});
+
+saveDetailsBtn.addEventListener("click", async () => {
+  let docSnap = await getDoc(docRef);
+
+  await updateDoc(docRef, {
+    passwords: arrayUnion({
+      password: editPasswordInput.value,
+      website: editWebsiteInput.value,
+      username: editUsernameInput.value,
+    }),
+  });
+
+  await updateDoc(docRef, {
+    passwords: arrayRemove(docSnap.data().passwords[currentWebsiteIndex]),
+  });
+
+  editWebisteForm.classList.toggle("active");
+
+  let newData = await getDoc(docRef);
+  let newPasswordArray = newData.data().passwords;
+  currentWebsiteIndex = newPasswordArray.length - 1;
+
+  websiteName.textContent = newPasswordArray[newPasswordArray.length - 1].website;
+  websiteUsername.value = newPasswordArray[newPasswordArray.length - 1].username;
+  websitePassword.value = newPasswordArray[newPasswordArray.length - 1].password;
 });
