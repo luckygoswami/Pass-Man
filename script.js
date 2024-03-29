@@ -41,6 +41,7 @@ const infoPage = document.querySelector(".infoPage");
 const websiteName = document.querySelector(".websiteName");
 const addAnotherWebsiteBtn = document.querySelector(".addAnotherWebsiteBtn");
 const addWebsiteForm = document.querySelector(".addWebsiteForm");
+const websiteForm = document.querySelector(".websiteForm");
 let newWebsite = document.querySelector(".newWebsite");
 let newWebsiteUsername = document.querySelector(".newWebsiteUsername");
 let newWebsitePassword = document.querySelector(".newWebsitePassword");
@@ -162,4 +163,12 @@ addWebsiteBtn.addEventListener("click", async () => {
   loadData(docSnap);
 
   addWebsiteForm.classList.toggle("active");
+});
+
+addWebsiteForm.addEventListener("click", (e) => {
+  console.log(newWebsite);
+  if (e.target.tagName == "DIV") {
+    addWebsiteForm.classList.toggle("active");
+  }
+  console.log(e);
 });
