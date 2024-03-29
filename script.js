@@ -56,6 +56,7 @@ const editWebsiteInput = document.querySelector(".editWebsite");
 const editUsernameInput = document.querySelector(".editUsername");
 const editPasswordInput = document.querySelector(".editPassword");
 const saveDetailsBtn = document.querySelector(".saveDetails");
+const deleteWebsiteBtn = document.querySelector(".deleteWebsiteBtn");
 
 let currentWebsiteIndex;
 let currentUserId;
@@ -228,4 +229,16 @@ saveDetailsBtn.addEventListener("click", async () => {
   websiteName.textContent = newPasswordArray[newPasswordArray.length - 1].website;
   websiteUsername.value = newPasswordArray[newPasswordArray.length - 1].username;
   websitePassword.value = newPasswordArray[newPasswordArray.length - 1].password;
+});
+
+deleteWebsiteBtn.addEventListener("click", async () => {
+  let docSnap = await getDoc(docRef);
+
+  await updateDoc(docRef, {
+    passwords: arrayRemove(docSnap.data().passwords[currentWebsiteIndex]),
+  });
+
+  infoPage.classList.toggle("active");
+  dataPage.classList.toggle("active");
+  loadData();
 });
