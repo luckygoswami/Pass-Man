@@ -172,6 +172,10 @@ addWebsiteBtn.addEventListener("click", async () => {
     }),
   });
 
+  newWebsitePassword.value = ''
+  newWebsite.value = ''
+  newWebsiteUsername.value = ''
+  
   loadData();
 
   addWebsiteForm.classList.toggle("active");
