@@ -2,6 +2,15 @@
   margin: 0;
   padding: 0%;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+}
+
+:root {
+  --colorOne: #FA7070;
+  --colorTwo: #FEFDED;
+  --colorThree: #C6EBC5;
+  --colorFour: #A1C398;
 }
 
 html,
@@ -64,22 +73,44 @@ input {
 }
 
 .dataPage.active {
+
+  border: 1px solid black;
+  border-radius: 1rem;
+  box-shadow: 10px 15px 20px rgba(0, 0, 0, 0.2);
   display: block;
   width: 70%;
-  height: 70%;
-  background-color: aqua;
+  height: 80%;
+  overflow: hidden;
 }
 
-.dataContainer.active {
-  width: 100%;
-  height: 100%;
-  background-color: lightcyan;
+.dataPageNav {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+}
+
+
+.dataContainer {
+  display: block;
+  height: calc(100% - 60px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: var(--colorTwo);
+}
+
+.dataContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .website {
   margin: 5px;
-  background-color: pink;
-  height: 40px;
+  background-color: var(--colorFour);
+  color: var(--colorTwo);
+  padding: 20px;
+  font-size: 20px;
+  border-radius: 1rem;
+  cursor: pointer;
 }
 
 .infoPage {
