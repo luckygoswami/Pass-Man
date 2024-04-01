@@ -172,17 +172,18 @@ addWebsiteBtn.addEventListener("click", async () => {
     }),
   });
 
-  newWebsitePassword.value = ''
-  newWebsite.value = ''
-  newWebsiteUsername.value = ''
-  
+  newWebsitePassword.value = "";
+  newWebsite.value = "";
+  newWebsiteUsername.value = "";
+
   loadData();
 
   addWebsiteForm.classList.toggle("active");
 });
 
+// close form on clicking outside the form box
 addWebsiteForm.addEventListener("click", (e) => {
-  if (e.target.tagName == "DIV") {
+  if (e.target == addWebsiteForm) {
     addWebsiteForm.classList.toggle("active");
   }
 });
@@ -203,8 +204,9 @@ editDetailsBtn.addEventListener("click", async () => {
   editPasswordInput.value = docSnap.data().passwords[currentWebsiteIndex].password;
 });
 
+// close form on clicking outside the form box
 editWebisteForm.addEventListener("click", (e) => {
-  if (e.target.tagName == "DIV") {
+  if (e.target == editWebisteForm) {
     editWebisteForm.classList.toggle("active");
   }
 });
