@@ -138,23 +138,36 @@ body {
 .dataPageNav {
   padding: 10px;
   display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.7);
   justify-content: space-between;
   background-color: white;
 }
 
 .dataContainer {
-  display: block;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 15px 15px;
+  align-items: center;
   height: calc(100% - 60px);
   overflow-y: scroll;
   overflow-x: hidden;
-  background-color: var(--colorTwo);
 }
 
 .dataContainer::-webkit-scrollbar {
   display: none;
 }
 
+.noDataDiv {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .website {
+  width: 100%;
   margin: 5px;
   background-color: var(--colorFour);
   color: var(--colorTwo);

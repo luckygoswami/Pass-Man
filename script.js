@@ -76,27 +76,33 @@ async function loadData() {
   let passwordsArray = docSnap.data().passwords;
 
   if (docSnap.exists() && passwordsArray) {
-    dataContainer.innerHTML = "";
+    if (passwordsArray.length < 1) {
+      dataContainer.innerHTML =
+        "<div class='noDataDiv'>no passwords yet to show</div>";
+    } else {
+      dataContainer.innerHTML = "";
 
-    passwordsArray.forEach((e, index) => {
-      let websiteDiv = document.createElement("div");
-      websiteDiv.textContent = e.website;
-      websiteDiv.classList.add("website");
-      dataContainer.appendChild(websiteDiv);
+      passwordsArray.forEach((e, index) => {
+        let websiteDiv = document.createElement("div");
+        websiteDiv.textContent = e.website;
+        websiteDiv.classList.add("website");
+        dataContainer.appendChild(websiteDiv);
 
-      websiteDiv.addEventListener("click", () => {
-        websiteName.textContent = e.website;
-        websiteUsername.value = e.username;
-        websitePassword.value = e.password;
-        currentWebsiteIndex = index;
+        websiteDiv.addEventListener("click", () => {
+          websiteName.textContent = e.website;
+          websiteUsername.value = e.username;
+          websitePassword.value = e.password;
+          currentWebsiteIndex = index;
 
-        dataPage.classList.toggle("active");
-        infoPage.classList.toggle("active");
+          dataPage.classList.toggle("active");
+          infoPage.classList.toggle("active");
+        });
       });
-    });
+    }
   } else {
     // docSnap.data() will be undefined in this case
-    dataContainer.innerHTML = "no passwords";
+    dataContainer.innerHTML =
+      "<div class='noDataDiv'>no passwords yet to show</div>";
     console.log("No such document!");
   }
 }
