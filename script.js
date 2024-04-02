@@ -58,6 +58,9 @@ const editPasswordInput = document.querySelector(".editPassword");
 const saveDetailsBtn = document.querySelector(".saveDetails");
 const deleteWebsiteBtn = document.querySelector(".deleteWebsiteBtn");
 
+const showPassword = document.querySelector(".showPassword");
+const hidePassword = document.querySelector(".hidePassword");
+
 let currentWebsiteIndex;
 let currentUserId;
 let userId;
@@ -247,4 +250,16 @@ deleteWebsiteBtn.addEventListener("click", async () => {
   infoPage.classList.toggle("active");
   dataPage.classList.toggle("active");
   loadData();
+});
+
+showPassword.addEventListener("click", () => {
+  websitePassword.type = "text";
+  showPassword.style.display = "none";
+  hidePassword.style.display = "inline-block";
+});
+
+hidePassword.addEventListener("click", () => {
+  websitePassword.type = "password";
+  hidePassword.style.display = "none";
+  showPassword.style.display = "inline-block";
 });
