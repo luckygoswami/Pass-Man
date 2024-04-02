@@ -30,20 +30,41 @@
     />
   </head>
   <body>
-    <div class="container">
+    <div class="container active">
       <div class="form">
-        <input type="text" class="inputUsername" placeholder="username" />
-        <input type="text" class="inputPassword" placeholder="password" />
-        <button id="login" class="formBtn active">login</button>
-        <button id="signup" class="formBtn">signup</button>
-        <button class="toggleFormBtn active">create an account, signup here</button>
-        <button class="toggleFormBtn">already have an account, login here</button>
+        <div class="inputFields">
+          <div class="inputBox">
+            <input type="text" class="inputUsername" required />
+            <span>username</span>
+          </div>
+          <div class="inputBox">
+            <input type="text" class="inputPassword" required />
+            <span>password</span>
+          </div>
+          <button id="login" class="formBtn active btn btn-success">login</button>
+          <button id="signup" class="formBtn btn btn-primary">signup</button>
+        </div>
+        <span class="toggleForm active"
+          >create an account,<button class="anchorBtn toggleFormBtn" id="signup">
+            &nbsp;signup</button
+          >&nbsp;here</span
+        >
+        <span class="toggleForm"
+          >already have an account,<button
+            class="anchorBtn toggleFormBtn"
+            id="login"
+          >
+            &nbsp;login</button
+          >&nbsp;here</span
+        >
+        <!-- <button class="toggleFormBtn active">create an account, signup here</button>
+        <button class="toggleFormBtn">already have an account, login here</button> -->
       </div>
     </div>
 
-    <div class="dataPage active">
+    <div class="dataPage">
       <div class="dataPageNav">
-        <button class="btn btn-dark">logout</button>
+        <button class="btn btn-dark" id="logout">logout</button>
 
         <button class="addAnotherWebsiteBtn btn btn-outline-primary">
           add another website

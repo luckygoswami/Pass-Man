@@ -30,11 +30,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const container = document.querySelector(".container");
 const signupBtn = document.getElementById("signup");
 const loginBtn = document.getElementById("login");
+const logout = document.getElementById("logout");
 const inputUsername = document.querySelector(".inputUsername");
 const inputPassword = document.querySelector(".inputPassword");
 const toggleFormBtn = document.querySelectorAll(".toggleFormBtn");
+const toggleForm = document.querySelectorAll(".toggleForm");
 const dataContainer = document.querySelector(".dataContainer");
 const dataPage = document.querySelector(".dataPage");
 const websiteUsername = document.querySelector(".websiteUsername");
@@ -66,14 +69,16 @@ let currentUserId;
 let userId;
 let userData;
 
-const docRef = doc(db, "users", "tG5N5ZH46uqETnZWkVRP");
+let docRef;
 
 async function loadData() {
   let docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
+  let passwordsArray = docSnap.data().passwords;
+
+  if (docSnap.exists() && passwordsArray) {
     dataContainer.innerHTML = "";
 
-    docSnap.data().passwords.forEach((e, index) => {
+    passwordsArray.forEach((e, index) => {
       let websiteDiv = document.createElement("div");
       websiteDiv.textContent = e.website;
       websiteDiv.classList.add("website");
@@ -91,19 +96,19 @@ async function loadData() {
     });
   } else {
     // docSnap.data() will be undefined in this case
+    dataContainer.innerHTML = "no passwords";
     console.log("No such document!");
   }
 }
 
-// create webiste divs
-loadData();
-
 toggleFormBtn.forEach((button) => {
+  // toggle login and signup buttons
   button.addEventListener("click", () => {
     loginBtn.classList.toggle("active");
     signupBtn.classList.toggle("active");
 
-    toggleFormBtn.forEach((btn) => {
+    // toggle span for login and signup button
+    toggleForm.forEach((btn) => {
       btn.classList.toggle("active");
     });
   });
@@ -151,7 +156,11 @@ loginBtn.addEventListener("click", async () => {
 
   if (userId && userData.pass == inputPassword.value) {
     currentUserId = userId;
-    console.log("logged in", currentUserId);
+    console.log("logged in", typeof currentUserId);
+    docRef = doc(db, "users", currentUserId);
+    container.classList.toggle("active");
+    dataPage.classList.toggle("active");
+    await loadData();
   } else if (!userId) {
     alert("no user exists with this username!");
   } else if (userData.pass != inputPassword.value) {
@@ -159,6 +168,14 @@ loginBtn.addEventListener("click", async () => {
   }
 
   clearFields();
+});
+
+logout.addEventListener("click", () => {
+  docRef = undefined;
+  dataContainer.innerHTML = "";
+
+  dataPage.classList.toggle("active");
+  container.classList.toggle("active");
 });
 
 addAnotherWebsiteBtn.addEventListener("click", () => {
@@ -179,7 +196,7 @@ addWebsiteBtn.addEventListener("click", async () => {
   newWebsite.value = "";
   newWebsiteUsername.value = "";
 
-  loadData();
+  await loadData();
 
   addWebsiteForm.classList.toggle("active");
 });
@@ -191,11 +208,11 @@ addWebsiteForm.addEventListener("click", (e) => {
   }
 });
 
-infoPageBackBtn.addEventListener("click", () => {
+infoPageBackBtn.addEventListener("click", async () => {
   infoPage.classList.toggle("active");
   dataPage.classList.toggle("active");
   togglePasswordVisibility("hide");
-  loadData();
+  await loadData();
 });
 
 editDetailsBtn.addEventListener("click", async () => {
@@ -250,7 +267,7 @@ deleteWebsiteBtn.addEventListener("click", async () => {
 
   infoPage.classList.toggle("active");
   dataPage.classList.toggle("active");
-  loadData();
+  await loadData();
 });
 
 function togglePasswordVisibility(type) {

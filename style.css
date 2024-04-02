@@ -27,20 +27,41 @@ body {
 }
 
 .container.active {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 70%;
   height: 70%;
 }
 
 .form {
-  width: 100%;
-  height: 100%;
-  background-color: peachpuff;
+  width: 50%;
+  height: 80%;
+  border: 1px solid rgba(0, 0, 0, 0.493);
+  border-radius: 1rem;
+  background-color: white;
+  padding: 50px 25px 25px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: column;
   gap: 5px;
+}
+
+.anchorBtn {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: blue;
+}
+
+.form .inputFields {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
 }
 
 .inputBox {
@@ -92,15 +113,12 @@ body {
   display: block;
 }
 
-.toggleFormBtn {
+.toggleForm {
   display: none;
 }
 
-.toggleFormBtn.active {
+.toggleForm.active {
   display: block;
-  background: transparent;
-  border: none;
-  cursor: pointer;
 }
 
 .dataPage {
