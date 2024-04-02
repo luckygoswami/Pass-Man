@@ -44,7 +44,7 @@
       <div class="dataContainer"></div>
     </div>
 
-    <div class="addWebsiteForm active">
+    <div class="addWebsiteForm">
       <div class="websiteForm">
         <div class="inputBox">
           <input type="text" class="newWebsite" required />
@@ -63,14 +63,30 @@
     </div>
 
     <div class="infoPage">
-      <button class="infoPage-backBtn"><-back</button>
+      <div class="infoPageNav">
+        <button class="infoPage-backBtn btn btn-secondary">back</button>
+        <div class="websiteName">thisiswebsite.com</div>
+      </div>
 
-      <div class="websiteName"></div>
-      <input type="text" class="websiteUsername" value="thisuser" readonly />
-      <input type="text" class="websitePassword" value="thispassword" />
+      <div class="infoPageData">
+        <div class="usernameDetail detailDiv">
+          <span>username:</span>
+          <input type="text" class="websiteUsername" value="thisuser" readonly />
+        </div>
+        <div class="passwordDetail detailDiv">
+          <span>password:</span>
+          <input type="text" class="websitePassword" value="thispassword" readonly />
+        </div>
+      </div>
 
-      <button class="deleteWebsiteBtn">delete Website</button>
-      <button class="editDetailsBtn">edit Details</button>
+      <div class="infoPageButton">
+        <button class="editDetailsBtn btn btn-outline-primary btn-lg">
+          edit Details
+        </button>
+        <button class="deleteWebsiteBtn btn btn-danger btn-lg">
+          delete Website
+        </button>
+      </div>
     </div>
 
     <div class="editWebisteForm">

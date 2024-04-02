@@ -43,12 +43,6 @@ body {
   gap: 5px;
 }
 
-/* input {
-  width: 500px;
-  height: 30px;
-  padding: 5px;
-} */
-
 .inputBox {
   position: relative;
   width: 90%;
@@ -72,7 +66,7 @@ body {
   color: #1d2b3a79;
   pointer-events: none;
   font-size: 1em;
-  transition: 0.3s ease;
+  transition: 0.2s ease-out;
 }
 
 .inputBox span.readonly {
@@ -159,9 +153,63 @@ body {
 
 .infoPage.active {
   display: block;
+  border-radius: 1rem;
   width: 70%;
   height: 70%;
-  background-color: lightblue;
+  background-color: rgb(240, 240, 240);
+}
+
+.infoPage .infoPageNav {
+  height: 15%;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid black;
+}
+
+.infoPage .infoPageNav .websiteName {
+  font-size: 35px;
+  text-align: center;
+  width: 80%;
+}
+
+.infoPage .infoPageData {
+  height: 65%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoPage .infoPageData .detailDiv {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 20px;
+}
+
+.infoPage .infoPageData .detailDiv span {
+  font-size: 22px;
+}
+
+.infoPage .infoPageData input {
+  height: 70px;
+  min-width: 500px;
+  border-radius: 1rem;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  outline: none;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.infoPage .infoPageButton {
+  height: 20%;
+  padding: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 50px;
 }
 
 .addWebsiteForm {
