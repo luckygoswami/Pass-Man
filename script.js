@@ -194,6 +194,7 @@ addWebsiteForm.addEventListener("click", (e) => {
 infoPageBackBtn.addEventListener("click", () => {
   infoPage.classList.toggle("active");
   dataPage.classList.toggle("active");
+  togglePasswordVisibility("hide");
   loadData();
 });
 
@@ -252,14 +253,22 @@ deleteWebsiteBtn.addEventListener("click", async () => {
   loadData();
 });
 
+function togglePasswordVisibility(type) {
+  if (type == "show") {
+    websitePassword.type = "text";
+    showPassword.style.display = "none";
+    hidePassword.style.display = "inline-block";
+  } else if (type == "hide") {
+    websitePassword.type = "password";
+    hidePassword.style.display = "none";
+    showPassword.style.display = "inline-block";
+  }
+}
+
 showPassword.addEventListener("click", () => {
-  websitePassword.type = "text";
-  showPassword.style.display = "none";
-  hidePassword.style.display = "inline-block";
+  togglePasswordVisibility("show");
 });
 
 hidePassword.addEventListener("click", () => {
-  websitePassword.type = "password";
-  hidePassword.style.display = "none";
-  showPassword.style.display = "inline-block";
+  togglePasswordVisibility("hide");
 });
