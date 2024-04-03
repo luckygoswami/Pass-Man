@@ -69,6 +69,12 @@ let currentUserId;
 let userId;
 let userData;
 
+var invalidUsernameMsg = `Username or password contains invalid characters. 
+
+username can contain: lowercase letter, any digit, special character underscore( _ ), and no spaces allowed
+
+password should contain: atleast one lowercase and one uppercase letter, atleast one digit and no spaces allowed`;
+
 let docRef;
 
 async function loadData() {
@@ -120,14 +126,28 @@ toggleFormBtn.forEach((button) => {
   });
 });
 
+function isValidUsernameAndPass(testUsername, testPassword) {
+  // Defining a regular expression pattern for valid characters
+  var usernamePattern = /^[a-z0-9_]+$/;
+  var passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*\s).{8,}$/; // At least one lowercase letter, one uppercase letter, and one digit without spaces
+
+  // Check if the username matches the pattern
+  return (
+    usernamePattern.test(testUsername) && passwordComplexityRegex.test(testPassword)
+  );
+}
+
 function clearFields() {
   inputUsername.value = "";
   inputPassword.value = "";
-  userId = "";
-  userData = "";
+  userId = undefined;
+  userData = undefined;
 }
 
 async function userCheck() {
+  userId = undefined;
+  userData = undefined;
+
   let q = query(
     collection(db, "users"),
     where("username", "==", inputUsername.value)
@@ -139,41 +159,67 @@ async function userCheck() {
     userId = doc.id;
     userData = doc.data();
   });
+
+  if (userId && userData) {
+    return { userId, userData };
+  } else {
+    return false;
+  }
 }
 
 signupBtn.addEventListener("click", async () => {
-  await userCheck();
+  let newUsername = inputUsername.value;
+  let newPassword = inputPassword.value;
 
-  if (userData.username == inputUsername.value) {
-    alert("user already exists with this username!");
-  } else if (!userId) {
-    await addDoc(collection(db, "users"), {
-      username: inputUsername.value,
-      pass: inputPassword.value,
-    });
-    alert("account created successfully");
+  if (await userCheck()) {
+    alert(
+      "another user exists with this username, please try a different username to create an account"
+    );
+    userId = undefined;
+    userData = undefined;
+  } else {
+    if (isValidUsernameAndPass(newUsername, newPassword)) {
+      // executing user registration
+      await addDoc(collection(db, "users"), {
+        username: newUsername,
+        pass: newPassword,
+      });
+
+      alert(
+        "account created successfully, please login with new username and password!"
+      );
+
+      clearFields();
+    } else {
+      alert(invalidUsernameMsg);
+    }
   }
-
-  clearFields();
 });
 
 loginBtn.addEventListener("click", async () => {
-  await userCheck();
+  let newUsername = inputUsername.value;
+  let newPassword = inputPassword.value;
 
-  if (userId && userData.pass == inputPassword.value) {
-    currentUserId = userId;
-    console.log("logged in", typeof currentUserId);
-    docRef = doc(db, "users", currentUserId);
-    container.classList.toggle("active");
-    dataPage.classList.toggle("active");
-    await loadData();
-  } else if (!userId) {
-    alert("no user exists with this username!");
-  } else if (userData.pass != inputPassword.value) {
-    alert("password incorrect!");
+  if (isValidUsernameAndPass(newUsername, newPassword)) {
+    if (!(await userCheck())) {
+      alert("no user exists with this username, please create an account first!");
+    } else {
+      userCheck().then(async (result) => {
+        if (result.userId && result.userData.pass == inputPassword.value) {
+          currentUserId = result.userId;
+          docRef = doc(db, "users", currentUserId);
+          container.classList.toggle("active");
+          dataPage.classList.toggle("active");
+          clearFields();
+          await loadData();
+        } else if (result.userData.pass != newPassword) {
+          alert("password incorrect!");
+        }
+      });
+    }
+  } else {
+    alert(invalidUsernameMsg);
   }
-
-  clearFields();
 });
 
 logout.addEventListener("click", () => {
