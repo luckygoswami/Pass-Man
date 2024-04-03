@@ -138,10 +138,13 @@ body {
 
 .dataPageNav {
   padding: 10px;
+  position: relative;
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 5px 20px 10px #0000003d;
   justify-content: space-between;
   background-color: white;
+  z-index: 1;
 }
 
 .dataContainer {
@@ -170,8 +173,8 @@ body {
 .website {
   width: 100%;
   margin: 5px;
-  background-color: var(--colorFour);
-  color: var(--colorTwo);
+  background-color: #e0ecf3;
+  color: #444444;
   padding: 20px;
   font-size: 20px;
   border-radius: 1rem;
@@ -187,7 +190,9 @@ body {
   border-radius: 1rem;
   width: 70%;
   height: 70%;
-  background-color: rgb(240, 240, 240);
+  background-color: #e0ecf3;
+  color: #444444;
+  box-shadow: 10px 15px 20px rgba(0, 0, 0, 0.2);
 }
 
 .infoPage .infoPageNav {
@@ -256,7 +261,7 @@ body {
   font-weight: 500;
   border: 1px solid rgba(0, 0, 0, 0.6);
   outline: none;
-  color: rgba(0, 0, 0, 0.85);
+  color: #6e6e6e;
 }
 
 .infoPage .infoPageButton {
@@ -303,6 +308,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 }
 
 .editWebisteForm {
