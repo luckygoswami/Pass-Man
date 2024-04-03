@@ -167,6 +167,19 @@ async function userCheck() {
   }
 }
 
+function validateFields(website, userName, userPassword) {
+  if (website.value.trim().length < 1) {
+    alert("website name cannot be empty");
+    return false;
+  } else if (userName.value.trim().length < 1) {
+    alert("username cannot be empty");
+    return false;
+  } else if (userPassword.value.trim().length < 1) {
+    alert("password cannot be empty");
+    return false;
+  } else return true;
+}
+
 signupBtn.addEventListener("click", async () => {
   let newUsername = inputUsername.value;
   let newPassword = inputPassword.value;
@@ -182,7 +195,7 @@ signupBtn.addEventListener("click", async () => {
       // executing user registration
       await addDoc(collection(db, "users"), {
         username: newUsername,
-        pass: newPassword,
+        userpass: newPassword,
       });
 
       alert(
@@ -205,14 +218,14 @@ loginBtn.addEventListener("click", async () => {
       alert("no user exists with this username, please create an account first!");
     } else {
       userCheck().then(async (result) => {
-        if (result.userId && result.userData.pass == inputPassword.value) {
+        if (result.userId && result.userData.userpass == inputPassword.value) {
           currentUserId = result.userId;
           docRef = doc(db, "users", currentUserId);
           container.classList.toggle("active");
           dataPage.classList.toggle("active");
           clearFields();
           await loadData();
-        } else if (result.userData.pass != newPassword) {
+        } else if (result.userData.userpass != newPassword) {
           alert("password incorrect!");
         }
       });
@@ -235,22 +248,24 @@ addAnotherWebsiteBtn.addEventListener("click", () => {
 });
 
 addWebsiteBtn.addEventListener("click", async () => {
-  // Atomically add a new website to the "passwords" array field.
-  await updateDoc(docRef, {
-    passwords: arrayUnion({
-      password: newWebsitePassword.value,
-      website: newWebsite.value,
-      username: newWebsiteUsername.value,
-    }),
-  });
+  if (validateFields(newWebsite, newWebsiteUsername, newWebsitePassword)) {
+    // Atomically add a new website to the "passwords" array field.
+    await updateDoc(docRef, {
+      passwords: arrayUnion({
+        password: newWebsitePassword.value,
+        website: newWebsite.value,
+        username: newWebsiteUsername.value,
+      }),
+    });
 
-  newWebsitePassword.value = "";
-  newWebsite.value = "";
-  newWebsiteUsername.value = "";
+    newWebsitePassword.value = "";
+    newWebsite.value = "";
+    newWebsiteUsername.value = "";
 
-  await loadData();
+    await loadData();
 
-  addWebsiteForm.classList.toggle("active");
+    addWebsiteForm.classList.toggle("active");
+  }
 });
 
 // close form on clicking outside the form box
@@ -287,27 +302,29 @@ editWebisteForm.addEventListener("click", (e) => {
 saveDetailsBtn.addEventListener("click", async () => {
   let docSnap = await getDoc(docRef);
 
-  await updateDoc(docRef, {
-    passwords: arrayUnion({
-      password: editPasswordInput.value,
-      website: editWebsiteInput.value,
-      username: editUsernameInput.value,
-    }),
-  });
+  if (validateFields(editWebsiteInput, editUsernameInput, editPasswordInput)) {
+    await updateDoc(docRef, {
+      passwords: arrayUnion({
+        password: editPasswordInput.value,
+        website: editWebsiteInput.value,
+        username: editUsernameInput.value,
+      }),
+    });
 
-  await updateDoc(docRef, {
-    passwords: arrayRemove(docSnap.data().passwords[currentWebsiteIndex]),
-  });
+    await updateDoc(docRef, {
+      passwords: arrayRemove(docSnap.data().passwords[currentWebsiteIndex]),
+    });
 
-  editWebisteForm.classList.toggle("active");
+    editWebisteForm.classList.toggle("active");
 
-  let newData = await getDoc(docRef);
-  let newPasswordArray = newData.data().passwords;
-  currentWebsiteIndex = newPasswordArray.length - 1;
+    let newData = await getDoc(docRef);
+    let newPasswordArray = newData.data().passwords;
+    currentWebsiteIndex = newPasswordArray.length - 1;
 
-  websiteName.textContent = newPasswordArray[newPasswordArray.length - 1].website;
-  websiteUsername.value = newPasswordArray[newPasswordArray.length - 1].username;
-  websitePassword.value = newPasswordArray[newPasswordArray.length - 1].password;
+    websiteName.textContent = newPasswordArray[newPasswordArray.length - 1].website;
+    websiteUsername.value = newPasswordArray[newPasswordArray.length - 1].username;
+    websitePassword.value = newPasswordArray[newPasswordArray.length - 1].password;
+  }
 });
 
 deleteWebsiteBtn.addEventListener("click", async () => {
